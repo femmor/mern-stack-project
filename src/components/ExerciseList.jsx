@@ -35,7 +35,41 @@ class ExerciseList extends Component {
         
         return (
             <>
-                <h2>Exercise List</h2>
+                <div className="row">
+                    <div className="col-10 mx-auto my-5">
+                    <h2>Logged Exercises</h2>
+                        <table className="table table-bordered table-hover">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Description</th>
+                                    <th>Duration</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    this.state.exercises.map(exercise => {
+                                        const { _id, username, description, duration, date } = exercise
+                                        return (
+                                            <tr key={_id}>
+                                                <td>{username}</td>
+                                                <td>{description}</td>
+                                                <td>{duration}</td>
+                                                <td>{date.substring(0, 10)}</td>
+                                                <td>
+                                                    <Link to={`/edit-exercise/${_id}`} className="btn btn-warning">Edit</Link>
+                                                    <a href="#" className="btn btn-danger" onClick={() => this.deleteExercise(_id)}>Delete</a>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </>
         );
     }
