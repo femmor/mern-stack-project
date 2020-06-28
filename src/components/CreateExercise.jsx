@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import axios from "axios"
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.min.css"
 
 class CreateExercise extends Component {
 
@@ -6,15 +9,21 @@ class CreateExercise extends Component {
         username: "",
         description: "",
         duration: 0,
-        date: new Date().toISOString(),
+        startDate: new Date(),
         users: []
     }
 
     componentDidMount() {
-        this.setState({
-            users: ["test user"],
-            username: "test user"
-        })
+        const url = "http://localhost:5000" 
+        axios.get(`${url}/users`)
+            .then(res => {
+                if(res.data.length > 0) {
+                    this.setState({
+                        users: res.data.map(user => user.username),
+                        username: res.data[0].username
+                    })
+                }
+            })
     }
     
 
@@ -31,8 +40,12 @@ class CreateExercise extends Component {
     }
 
     onChangeDate = (e) => {
-        this.setState({ date: e.target.value })
+        this.setState({ startDate: e.target.value })
     }
+
+    handleDateChange = date => {
+        this.setState({ startDate: date })
+      };
 
     SubmitHandler = (e) => {
         e.preventDefault()
@@ -41,10 +54,13 @@ class CreateExercise extends Component {
             username: this.state.username,
             description: this.state.description,
             duration: this.state.duration,
-            date: this.state.date
+            date: this.state.startDate
         }
 
-        console.log(exercise)
+        // Send exercise to server
+        const url = "http://localhost:5000" 
+        axios.post(`${url}/exercises/add`, exercise)
+            .then(res => console.log(res.data))
 
         window.location = "/"
     }
@@ -89,8 +105,16 @@ class CreateExercise extends Component {
                             <input type="number" className="form-control" name="duration" value={this.state.duration} onChange={this.onChangeDuration} required/>
                         </div>
                         <div className="form-group">
-                            <label htmlFor="date">Date</label>
-                            <input type="date" className="form-control" name="date" value={this.state.date} onChange={this.onChangeDate} required/>
+                            <div>
+                                <label htmlFor="date">Date</label>
+                            </div>
+                            <DatePicker
+                                selected={this.state.startDate}
+                                onChange={this.handleDateChange}
+                                onSelect={this.handleSelect}
+                                className="form-control"
+                                value={this.state.startDate}
+                            />
                         </div>
                         <button type="submit" className="btn btn-primary btn-block">Create exercise log</button>
                     </form>
