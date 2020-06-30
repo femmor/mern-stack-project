@@ -38,13 +38,13 @@ router.route("/:id").get((req, res) => {
 // Delete exercise with Id method
 router.route("/:id").delete((req, res) => {
     Exercise.findByIdAndDelete(req.params.id)
-    .then(() => res.json("Exercise edited!"))
+    .then(() => res.json("Exercise deleted!"))
     .catch(error => res.status(400).json("Error "+error))
 })
 
 // Update exercise with Id method
-router.route("/update/:id").post((req, res) => {
-    Exercise.findById(req.params.id)
+router.route("/:id").post((req, res) => {
+    Exercise.findByIdAndUpdate(req.params.id)
     .then(exercise => {
         exercise.username = req.body.username,
         exercise.description = req.body.description,

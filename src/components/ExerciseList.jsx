@@ -59,8 +59,7 @@ class ExerciseList extends Component {
                                                 <td>{duration}</td>
                                                 <td>{date.substring(0, 10)}</td>
                                                 <td>
-                                                    <Link to={`/edit-exercise/${_id}`} className="btn btn-warning">Edit</Link>
-                                                    <a href="#" className="btn btn-danger" onClick={() => this.deleteExercise(_id)}>Delete</a>
+                                                    <Link to={`/edit-exercise/${_id}`} >edit</Link> | <a href="#"  onClick={() => this.deleteExercise(_id)}>delete</a>
                                                 </td>
                                             </tr>
                                         )

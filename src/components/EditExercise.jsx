@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import axios from "axios"
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.min.css"
 
-class EditExercise extends Component {
+class CreateExercise extends Component {
+
     state = {
         username: "",
         description: "",
@@ -14,19 +15,21 @@ class EditExercise extends Component {
 
     componentDidMount() {
         const url = "http://localhost:5000" 
+        const id = this.props.match.params.id
 
-        axios.get(`${url}/exercises/update/`+this.props.match.params.id)
+        axios.get(`${url}/exercises/${id}`)
             .then(res => {
+                
                 this.setState({
                     username: res.data.username,
                     description: res.data.description,
                     duration: res.data.duration,
-                    date: new Date(res.data.startDate)
+                    startDate: res.data.startDate
                 })
             })
             .catch(error => console.log(error))
 
-        // Get users
+
         axios.get(`${url}/users`)
             .then(res => {
                 if(res.data.length > 0) {
@@ -34,7 +37,7 @@ class EditExercise extends Component {
                         users: res.data.map(user => user.username)
                     })
                 }
-            }).catch(error => console.log(error))
+            })
     }
     
 
@@ -70,7 +73,8 @@ class EditExercise extends Component {
 
         // Send exercise to server
         const url = "http://localhost:5000" 
-        axios.post(`${url}/exercises/update/`+this.props.match.params.id, exercise)
+        const id = this.props.match.params.id
+        axios.post(`${url}/exercises/${id}`, exercise)
             .then(res => console.log(res.data))
 
         window.location = "/"
@@ -109,7 +113,7 @@ class EditExercise extends Component {
                         </div>
                         <div className="form-group">
                             <label htmlFor="description">Description</label>
-                            <textarea name="description" id="" cols="30" rows="10" className="form-control" onChange={this.onChangeDescription} placeholder="Describe your exercise routine here..." required></textarea>
+                            <textarea name="description" id="" cols="30" rows="10" className="form-control" onChange={this.onChangeDescription} value={this.state.description} required></textarea>
                         </div>
                         <div className="form-group">
                             <label htmlFor="duration">Duration (in minutes)</label>
@@ -134,6 +138,8 @@ class EditExercise extends Component {
             </>
         );
     }
+
+    
 }
 
-export default EditExercise;
+export default CreateExercise;
